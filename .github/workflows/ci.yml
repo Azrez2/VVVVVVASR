@@ -152,10 +152,11 @@ jobs:
       run: |
         cd $env:SRC_DIR_PATH/build
         cmake --build .
-    - name: Build (default version)
-      run: |
-        cd $env:SRC_DIR_PATH/build
-        cmake --build .
+    - name: Upload binary (default version)
+      uses: actions/upload-artifact@v1
+      with:
+        name: VVVVVV-default-windows-latest
+        path: ${{ env.SRC_DIR_PATH }}/Release/VVVVVV.exe # ${{ env.SRC_DIR_PATH }}/Debug/VVVVVV.exe if compiling in Debug mode (default)
 
 
     - name: CMake configure (official)
