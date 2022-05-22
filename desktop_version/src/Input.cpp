@@ -2416,14 +2416,14 @@ void gameinput(void)
     }
 
     //Input ouput code please work
-    char gameInputTextOutput[14] = "Inputs: ";
+    std::string gameInputTextOutput = "Inputs: ";
     game.press_left ? gameInputTextOutput += "<" : gameInputTextOutput += " ";
     game.press_right ? gameInputTextOutput += ">" : gameInputTextOutput += " ";
     game.press_action ? gameInputTextOutput += "A" : gameInputTextOutput += " ";
     key.isDown(KEYBOARD_r) ? gameInputTextOutput += "R" : gameInputTextOutput += " ";
     game.press_interact ? gameInputTextOutput += "I" : gameInputTextOutput += " ";
     game.press_map ? gameInputTextOutput += "M" : gameInputTextOutput += " ";
-    printf(gameInputTextOutput);
+    vlog_info(gameInputTextOutput.c_str());
 }
 
 static void mapmenuactionpress(bool version2_2);
