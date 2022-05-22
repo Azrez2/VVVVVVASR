@@ -1,4 +1,5 @@
 #include <tinyxml2.h>
+#include <iostream>
 
 #include "Credits.h"
 #include "CustomLevels.h"
@@ -2415,15 +2416,14 @@ void gameinput(void)
     }
 
     //Input ouput code please work
-    std::string gameInputTextOutput = "Inputs: ";
+    char[14] gameInputTextOutput = "Inputs: ";
     game.press_left ? gameInputTextOutput += "<" : gameInputTextOutput += " ";
     game.press_right ? gameInputTextOutput += ">" : gameInputTextOutput += " ";
     game.press_action ? gameInputTextOutput += "A" : gameInputTextOutput += " ";
     key.isDown(KEYBOARD_r) ? gameInputTextOutput += "R" : gameInputTextOutput += " ";
     game.press_interact ? gameInputTextOutput += "I" : gameInputTextOutput += " ";
     game.press_map ? gameInputTextOutput += "M" : gameInputTextOutput += " ";
-    std::cout << gameInputTextOutput;
-
+    printf(gameInputTextOutput);
 }
 
 static void mapmenuactionpress(bool version2_2);
