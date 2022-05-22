@@ -18,9 +18,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: true
 
     - name: Install dependencies
-      run: brew install ninja sdl2 sdl2_mixer
+      run: brew install ninja sdl2
 
     - name: CMake configure (default version)
       run: |
@@ -28,12 +30,6 @@ jobs:
         cmake -GNinja ..
     - name: Build (default version)
       run: ninja -C ${SRC_DIR_PATH}/build
-
-    - name: Upload binary (default version)
-      uses: actions/upload-artifact@v1
-      with:
-        name: VVVVVV-default-macos-latest
-        path: ${{ env.SRC_DIR_PATH }}/build/VVVVVV
 
     - name: CMake configure (official)
       run: |
@@ -49,12 +45,6 @@ jobs:
         cmake -DOFFICIAL_BUILD=OFF -DMAKEANDPLAY=ON ..
     - name: Build (M&P)
       run: ninja -C ${SRC_DIR_PATH}/build
-
-    - name: Upload binary (M&P)
-      uses: actions/upload-artifact@v1
-      with:
-        name: VVVVVV-MP-macos-latest
-        path: ${{ env.SRC_DIR_PATH }}/build/VVVVVV
 
     - name: CMake configure (no custom levels)
       run: |
@@ -74,7 +64,7 @@ jobs:
     name: Build (CentOS 7)
 
     runs-on: ubuntu-latest
-    container: ghcr.io/infoteddy/vvvvvv-build@sha256:3f55f514d9418479de1f5240f88a25095fefcd333aa1323f04fe8530ff26d10f
+    container: ghcr.io/infoteddy/vvvvvv-build@sha256:2965b59331026ce108836e5226cfda5e08a8c8440156b58944dff0fe5cf93f94
 
     env:
       CXXFLAGS: -I/usr/local/include/SDL2
@@ -82,6 +72,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: true
 
     - name: CMake configure (default version)
       run: |
@@ -89,12 +81,6 @@ jobs:
         cmake ..
     - name: Build (default version)
       run: make -j $(nproc) -C ${SRC_DIR_PATH}/build
-
-    - name: Upload binary (default version)
-      uses: actions/upload-artifact@v1
-      with:
-        name: VVVVVV-default-ubuntu-latest
-        path: ${{ env.SRC_DIR_PATH }}/build/VVVVVV
 
     - name: CMake configure (official)
       run: |
@@ -110,12 +96,6 @@ jobs:
         cmake -DOFFICIAL_BUILD=OFF -DMAKEANDPLAY=ON ..
     - name: Build (M&P)
       run: make -j $(nproc) -C ${SRC_DIR_PATH}/build
-
-    - name: Upload binary (M&P)
-      uses: actions/upload-artifact@v1
-      with:
-        name: VVVVVV-MP-ubuntu-latest
-        path: ${{ env.SRC_DIR_PATH }}/build/VVVVVV
 
     - name: CMake configure (no custom levels)
       run: |
@@ -136,70 +116,80 @@ jobs:
 
     runs-on: windows-latest
 
+    env:
+      SDL_VERSION: 2.0.22
+
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: true
 
-    - name: Install dependencies (Windows)
+    - name: Cache SDL
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-sdl
+      with:
+        path: C:\SDL
+        key: ${{ runner.os }}-build-${{ env.cache-name }}
+
+    - name: Download SDL if not cached
       run: |
-        vcpkg install sdl2 sdl2-mixer
+        if (-Not (Test-Path C:\SDL))
+        {
+          Invoke-WebRequest "https://github.com/libsdl-org/SDL/releases/download/release-$env:SDL_VERSION/SDL2-devel-$env:SDL_VERSION-VC.zip" -o C:\SDL.zip
+          Expand-Archive C:\SDL.zip -DestinationPath C:\
+        }
 
     - name: CMake configure (default version)
       run: |
-        cd $env:SRC_DIR_PATH
-        $env:LDFLAGS =  "/LIBPATH:$env:VCPKG_INSTALLATION_ROOT\installed\x86-windows\lib "
-        $env:LDFLAGS += "/LIBPATH:$env:VCPKG_INSTALLATION_ROOT\installed\x86-windows\lib\manual-link"
-        cmake -G "Visual Studio 16 2019" -A Win32 `
-              -DSDL2_INCLUDE_DIRS="$env:VCPKG_INSTALLATION_ROOT\installed\x86-windows\include\SDL2" `
-              -DSDL2_LIBRARIES="SDL2;SDL2main;SDL2_mixer" .
+        mkdir $env:SRC_DIR_PATH/build
+        cd $env:SRC_DIR_PATH/build
+        $env:LDFLAGS =  "/LIBPATH:C:\SDL2-$env:SDL_VERSION\lib\x86 "
+        cmake -G "Visual Studio 17 2022" -A Win32 `
+              -DSDL2_INCLUDE_DIRS="C:\SDL2-$env:SDL_VERSION\include" `
+              -DSDL2_LIBRARIES="SDL2;SDL2main" ..
     - name: Build (default version)
       run: |
-        cd $env:SRC_DIR_PATH
-        cmake --build . --config Release
+        cd $env:SRC_DIR_PATH/build
+        cmake --build .
+    - name: Build (default version)
+      run: |
+        cd $env:SRC_DIR_PATH/build
+        cmake --build .
 
-    - name: Upload binary (default version)
-      uses: actions/upload-artifact@v1
-      with:
-        name: VVVVVV-default-windows-latest
-        path: ${{ env.SRC_DIR_PATH }}/Release/VVVVVV.exe # ${{ env.SRC_DIR_PATH }}/Debug/VVVVVV.exe if compiling in Debug mode (default)
 
     - name: CMake configure (official)
       run: |
-        cd $env:SRC_DIR_PATH
-        cmake -DOFFICIAL_BUILD=ON .
+        cd $env:SRC_DIR_PATH/build
+        cmake -DOFFICIAL_BUILD=ON ..
     - name: Build (official)
       run: |
-        cd $env:SRC_DIR_PATH
+        cd $env:SRC_DIR_PATH/build
         cmake --build .
 
     - name: CMake configure (M&P)
       run: |
-        cd $env:SRC_DIR_PATH
-        cmake -DOFFICIAL_BUILD=OFF -DMAKEANDPLAY=ON .
+        cd $env:SRC_DIR_PATH/build
+        cmake -DOFFICIAL_BUILD=OFF -DMAKEANDPLAY=ON ..
     - name: Build (M&P)
       run: |
-        cd $env:SRC_DIR_PATH
-        cmake --build . --config Release
-
-    - name: Upload binary (M&P)
-      uses: actions/upload-artifact@v1
-      with:
-        name: VVVVVV-MP-windows-latest
-        path: ${{ env.SRC_DIR_PATH }}/Release/VVVVVV.exe
+        cd $env:SRC_DIR_PATH/build
+        cmake --build .
 
     - name: CMake configure (no custom levels)
       run: |
-        cd $env:SRC_DIR_PATH
-        cmake -DMAKEANDPLAY=OFF -DCUSTOM_LEVEL_SUPPORT=DISABLED .
+        cd $env:SRC_DIR_PATH/build
+        cmake -DMAKEANDPLAY=OFF -DCUSTOM_LEVEL_SUPPORT=DISABLED ..
     - name: Build (no custom levels)
       run: |
-        cd $env:SRC_DIR_PATH
+        cd $env:SRC_DIR_PATH/build
         cmake --build .
 
     - name: CMake configure (no editor)
       run: |
-        cd $env:SRC_DIR_PATH
-        cmake -DCUSTOM_LEVEL_SUPPORT=NO_EDITOR .
+        cd $env:SRC_DIR_PATH/build
+        cmake -DCUSTOM_LEVEL_SUPPORT=NO_EDITOR ..
     - name: Build (no editor)
       run: |
-        cd $env:SRC_DIR_PATH
+        cd $env:SRC_DIR_PATH/build
         cmake --build .
