@@ -2084,7 +2084,7 @@ void gameinput(void)
         game.hascontrol = false;
     }
 
-    //spaghetti code for printing game inputs
+    //spaghetti code for printing game inputs, should work though
     std::string gameInputTextOutput = "Inputs: ";
     game.press_left ? gameInputTextOutput += "<" : gameInputTextOutput += " ";
     game.press_right ? gameInputTextOutput += ">" : gameInputTextOutput += " ";
