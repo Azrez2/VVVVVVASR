@@ -2084,6 +2084,7 @@ void gameinput(void)
         game.hascontrol = false;
     }
 
+<<<<<<< HEAD
     //spaghetti code for printing game inputs, should work though
     std::string gameInputTextOutput = "Inputs: ";
     game.press_left ? gameInputTextOutput += "<" : gameInputTextOutput += " ";
@@ -2095,6 +2096,8 @@ void gameinput(void)
     vlog_info(gameInputTextOutput);
     
 
+=======
+>>>>>>> parent of 2a929cf (added code for printing game inputs to Input.cpp)
     //Returning to editor mode must always be possible
 #if !defined(NO_CUSTOM_LEVELS) && !defined(NO_EDITOR)
     if (map.custommode && !map.custommodeforreal)
