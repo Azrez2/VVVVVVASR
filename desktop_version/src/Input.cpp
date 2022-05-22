@@ -2423,7 +2423,7 @@ void gameinput(void)
     key.isDown(SDLK_r) ? gameInputTextOutput += "R" : gameInputTextOutput += " ";
     game.press_interact ? gameInputTextOutput += "I" : gameInputTextOutput += " ";
     game.press_map ? gameInputTextOutput += "M" : gameInputTextOutput += " ";
-    vlog_info(gameInputTextOutput.c_str());
+    printf(gameInputTextOutput.c_str());
 }
 
 static void mapmenuactionpress(bool version2_2);
