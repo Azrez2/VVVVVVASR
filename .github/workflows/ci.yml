@@ -156,7 +156,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: VVVVVV-default-windows-latest
-        path: ${{ env.SRC_DIR_PATH }}/Release/VVVVVV.exe # ${{ env.SRC_DIR_PATH }}/Debug/VVVVVV.exe if compiling in Debug mode (default)
+        path: ${{ env.SRC_DIR_PATH }}/Debug/VVVVVV.exe # ${{ env.SRC_DIR_PATH }}/Debug/VVVVVV.exe if compiling in Debug mode (default)
 
 
     - name: CMake configure (official)
