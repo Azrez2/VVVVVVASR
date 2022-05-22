@@ -2416,7 +2416,7 @@ void gameinput(void)
     }
 
     //Input ouput code please work
-    char[14] gameInputTextOutput = "Inputs: ";
+    char gameInputTextOutput[14] = "Inputs: ";
     game.press_left ? gameInputTextOutput += "<" : gameInputTextOutput += " ";
     game.press_right ? gameInputTextOutput += ">" : gameInputTextOutput += " ";
     game.press_action ? gameInputTextOutput += "A" : gameInputTextOutput += " ";
