@@ -2413,6 +2413,17 @@ void gameinput(void)
     {
         game.deathseq = 30;
     }
+
+    //Input ouput code please work
+    std::string gameInputTextOutput = "Inputs: ";
+    game.press_left ? gameInputTextOutput += "<" : gameInputTextOutput += " ";
+    game.press_right ? gameInputTextOutput += ">" : gameInputTextOutput += " ";
+    game.press_action ? gameInputTextOutput += "A" : gameInputTextOutput += " ";
+    key.isDown(KEYBOARD_r) ? gameInputTextOutput += "R" : gameInputTextOutput += " ";
+    game.press_interact ? gameInputTextOutput += "I" : gameInputTextOutput += " ";
+    game.press_map ? gameInputTextOutput += "M" : gameInputTextOutput += " ";
+    printf(gameInputTextOutput);
+
 }
 
 static void mapmenuactionpress(bool version2_2);
