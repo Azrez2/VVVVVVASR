@@ -2420,7 +2420,7 @@ void gameinput(void)
     game.press_left ? gameInputTextOutput += "<" : gameInputTextOutput += " ";
     game.press_right ? gameInputTextOutput += ">" : gameInputTextOutput += " ";
     game.press_action ? gameInputTextOutput += "A" : gameInputTextOutput += " ";
-    key.isDown(KEYBOARD_r) ? gameInputTextOutput += "R" : gameInputTextOutput += " ";
+    key.isDown(SDLK_r) ? gameInputTextOutput += "R" : gameInputTextOutput += " ";
     game.press_interact ? gameInputTextOutput += "I" : gameInputTextOutput += " ";
     game.press_map ? gameInputTextOutput += "M" : gameInputTextOutput += " ";
     vlog_info(gameInputTextOutput.c_str());
