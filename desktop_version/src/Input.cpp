@@ -2422,7 +2422,7 @@ void gameinput(void)
     key.isDown(KEYBOARD_r) ? gameInputTextOutput += "R" : gameInputTextOutput += " ";
     game.press_interact ? gameInputTextOutput += "I" : gameInputTextOutput += " ";
     game.press_map ? gameInputTextOutput += "M" : gameInputTextOutput += " ";
-    printf(gameInputTextOutput);
+    std::cout << gameInputTextOutput;
 
 }
 
